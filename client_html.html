@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Stream</title>
+</head>
+<body>
+    <h1>Video Stream</h1>
+    <img id="video" width="640" height="480" />
+    
+    <script>
+        const videoElement = document.getElementById('video');
+        const ws = new WebSocket('ws://10.0.0.18:8765');
+
+        ws.onmessage = function(event) {
+            // Convert the byte stream to a Blob and create a URL for it
+            const blob = new Blob([event.data], { type: 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
+            
+            // Set the image source to the video stream
+            videoElement.src = url;
+        };
+
+        ws.onopen = function() {
+            console.log("Connected to the server");
+        };
+
+        ws.onerror = function(error) {
+            console.error("WebSocket error: ", error);
+        };
+
+        ws.onclose = function() {
+            console.log("Connection closed");
+        };
+    </script>
+</body>
+</html>
+

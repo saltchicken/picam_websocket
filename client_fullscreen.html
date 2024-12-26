@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Stream</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: black;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            border: 2px solid white;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <img id="video" alt="Video Stream" />
+    <button id="fullscreenButton">Go Fullscreen</button>
+    
+    <script>
+        const videoElement = document.getElementById('video');
+        const fullscreenButton = document.getElementById('fullscreenButton');
+        const ws = new WebSocket('ws://10.0.0.18:8765'); // Replace with your Raspberry Pi's IP address
+
+        ws.onmessage = function(event) {
+            // Convert the byte stream to a Blob and create a URL for it
+            const blob = new Blob([event.data], { type: 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
+            
+            // Set the image source to the video stream
+            videoElement.src = url;
+        };
+
+        ws.onopen = function() {
+            console.log("Connected to the server");
+        };
+
+        ws.onerror = function(error) {
+            console.error("WebSocket error: ", error);
+        };
+
+        ws.onclose = function() {
+            console.log("Connection closed");
+        };
+
+        // Enable fullscreen when the button is clicked
+        fullscreenButton.addEventListener('click', () => {
+            const requestFullscreen = videoElement.requestFullscreen || 
+                                       videoElement.webkitRequestFullscreen || 
+                                       videoElement.mozRequestFullScreen || 
+                                       videoElement.msRequestFullscreen;
+
+            if (requestFullscreen) {
+                requestFullscreen.call(videoElement); // Request fullscreen for the video element
+            }
+        });
+    </script>
+</body>
+</html>
