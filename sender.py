@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from picamera2 import Picamera2, Preview
 import ssl
+import time
 
 # Initialize Picamera2
 picam2 = Picamera2()
@@ -15,7 +16,15 @@ video_config["controls"]["FrameDurationLimits"] = (frame_duration, frame_duratio
 
 picam2.configure(video_config)
 picam2.start()
+time.sleep(2)
 
+size = picam2.capture_metadata()['ScalerCrop'][2:]
+full_res = picam2.camera_properties['PixelArraySize']
+
+print("size")
+print(picam2.capture_metadata()['ScalerCrop'])
+print(size)
+print(full_res)
 
 
 
@@ -25,7 +34,10 @@ async def send_video(websocket):
         _, jpeg = cv2.imencode('.jpg', frame)
         jpeg_bytes = jpeg.tobytes()
         
-        await websocket.send(jpeg_bytes)
+        try:
+            await websocket.send(jpeg_bytes)
+        except:
+            print("I think this is caused by disconnecting")
         await asyncio.sleep(0.01)
 
 async def receive_messages(websocket):
@@ -35,8 +47,14 @@ async def receive_messages(websocket):
             command = message.split("=")
             if command[0] == "focus" and len(command) == 2:
                 new_focus = float(command[1])
-                print(new_focus)
+                picam2.set_controls({"AfMode": 0, "LensPosition": int(new_focus)})
+                print(int(new_focus))
                 # await websocket.send(f"DEBUG: message received {new_frequency}")
+            elif command[0] == "zoom" and len(command) == 2:
+                # new_zoom = float(command[1])
+                print('testing')
+                picam2.set_controls({"ScalerCrop": (100, 100, 3840, 2880)})
+                print("Received zoom")
             else:
                 print("Invalid command")
         except ValueError:
