@@ -9,7 +9,7 @@ import time
 
 # Initialize Picamera2
 picam2 = Picamera2()
-video_config = picam2.create_video_configuration(main={"size": (640, 480)})
+video_config = picam2.create_video_configuration(main={"size": (640, 480)}, transform=Transform(hflip=True, vflip=True))
 fps = 10
 frame_duration = int(1e6 / fps)
 video_config["controls"]["FrameDurationLimits"] = (frame_duration, frame_duration)
