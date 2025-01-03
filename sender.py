@@ -3,6 +3,7 @@ import asyncio
 import websockets
 import cv2
 import numpy as np
+import libcamera
 from picamera2 import Picamera2, Preview
 import ssl
 import time
@@ -13,7 +14,7 @@ video_config = picam2.create_video_configuration(main={"size": (640, 480)})
 fps = 10
 frame_duration = int(1e6 / fps)
 video_config["controls"]["FrameDurationLimits"] = (frame_duration, frame_duration)
-video_config["transform"] = 2
+video_config["transform"] = libcamera.Transform(hflip=1, vflip=1)
 
 picam2.configure(video_config)
 picam2.start()
