@@ -33,6 +33,7 @@ print(full_res)
 async def send_video(websocket):
     while True:
         frame = picam2.capture_array()
+        frame = frame[..., ::-1]
         _, jpeg = cv2.imencode('.jpg', frame)
         jpeg_bytes = jpeg.tobytes()
         
