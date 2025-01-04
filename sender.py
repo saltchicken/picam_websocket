@@ -71,8 +71,8 @@ async def receive_messages(websocket):
 
                 print(current_offset)
 
-                # picam2.set_controls({"ScalerCrop": (100, 100, 3840, 2880)})
-                # print("Received zoom")
+                picam2.set_controls({"ScalerCrop": (100, 100, 3840, 2880)})
+                print("Received zoom")
             else:
                 print("Invalid command")
         except ValueError:
