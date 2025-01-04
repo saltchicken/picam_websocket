@@ -45,6 +45,8 @@ async def send_video(websocket):
         await asyncio.sleep(0.01)
 
 async def receive_messages(websocket):
+    size = picam2.capture_metadata()['ScalerCrop'][2:]
+    full_res = picam2.camera_properties['PixelArraySize']
     async for message in websocket:
         print(f"Received from client: {message}")
         try:
