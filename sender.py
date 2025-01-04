@@ -53,10 +53,22 @@ async def receive_messages(websocket):
                 print(int(new_focus))
                 # await websocket.send(f"DEBUG: message received {new_frequency}")
             elif command[0] == "zoom" and len(command) == 2:
-                # new_zoom = float(command[1])
-                print('testing')
-                picam2.set_controls({"ScalerCrop": (100, 100, 3840, 2880)})
-                print("Received zoom")
+                current_offset = picam2.capture_metadata()['ScalerCrop'][:2]
+                new_zoom = command[1]
+                if new_zoom == "up":
+                    current_offset[1] += 10
+                    picam2.set_control({"ScalerCrop": (current_offset[0], current_offset[1], 3840, 2880)})
+                    print("Zooming up")
+                elif new_zoom == "down":
+                    current_offset[1] -= 10
+                    picam2.set_controls({"ScalerCrop": (current_offset[0], current_offset[1], 3840, 2880)})
+                    print("Zooming down")
+
+                else:
+                    print("Invalid zoom direction")
+
+                # picam2.set_controls({"ScalerCrop": (100, 100, 3840, 2880)})
+                # print("Received zoom")
             else:
                 print("Invalid command")
         except ValueError:
