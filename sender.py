@@ -59,11 +59,13 @@ async def receive_messages(websocket):
                 print(new_zoom)
                 if new_zoom == "up":
                     current_offset[1] += 100
-                    picam2.set_controls({"ScalerCrop": (current_offset[0], current_offset[1], 3840, 2880)})
+                    # picam2.set_controls({"ScalerCrop": (current_offset[0], current_offset[1], 3840, 2880)})
+                    picam2.set_controls({"ScalerCrop": (100, 100, 3840, 2880)})
                     print("Zooming up")
                 elif new_zoom == "down":
                     current_offset[1] -= 100
-                    picam2.set_controls({"ScalerCrop": (current_offset[0], current_offset[1], 3840, 2880)})
+                    # picam2.set_controls({"ScalerCrop": (current_offset[0], current_offset[1], 3840, 2880)})
+                    picam2.set_controls({"ScalerCrop": (300, 300, 3840, 2880)})
                     print("Zooming down")
 
                 else:
