@@ -56,6 +56,7 @@ async def receive_messages(websocket):
                 # await websocket.send(f"DEBUG: message received {new_frequency}")
             elif command[0] == "zoom" and len(command) == 2:
                 new_zoom = command[1]
+                print(new_zoom)
                 if new_zoom == "up":
                     current_offset[1] += 10
                     picam2.set_controls({"ScalerCrop": (current_offset[0], current_offset[1], 3840, 2880)})
