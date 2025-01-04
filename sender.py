@@ -28,6 +28,8 @@ print(picam2.capture_metadata()['ScalerCrop'])
 print(size)
 print(full_res)
 
+current_offset = list(picam2.capture_metadata()['ScalerCrop'][:2])
+
 
 
 async def send_video(websocket):
@@ -53,7 +55,6 @@ async def receive_messages(websocket):
                 print(int(new_focus))
                 # await websocket.send(f"DEBUG: message received {new_frequency}")
             elif command[0] == "zoom" and len(command) == 2:
-                current_offset = list(picam2.capture_metadata()['ScalerCrop'][:2])
                 new_zoom = command[1]
                 if new_zoom == "up":
                     current_offset[1] += 10
